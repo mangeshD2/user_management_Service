@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: 03_USER_MANAGEMENT_APPLICATION
+  datasource:
+    username: root
+    password: Mangesh@123
+    url: jdbc:mysql://localhost:3306/mangesh
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: deshmukhm621@gmail.com
+    password: Viratian@12345
+    properties:
+      mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+      
+      
+server:
+  port: 8083
+
