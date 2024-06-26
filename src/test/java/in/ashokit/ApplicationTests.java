@@ -8,6 +8,11 @@ class ApplicationTests {
 
 	@Test
 	void contextLoads() {
+		assertEquals();
+	}
+
+	private void assertEquals() {
+
 	}
 
 }

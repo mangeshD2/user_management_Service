@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -22,11 +24,15 @@ import in.ashokit.utils.EmailUtils;
 @Service
 public class UserMgmgServiceImpl implements UserMgmtService {
 
+	private Logger logger = LoggerFactory.getLogger(UserMgmgServiceImpl.class);
+
 	@Autowired
 	private UserMasterRepo userMasterRepo;
 
 	@Autowired
 	private EmailUtils emailUtils;
+
+	private Random random = new Random();
 
 	@Override
 	public boolean saveUser(User user) {
@@ -90,7 +96,7 @@ public class UserMgmgServiceImpl implements UserMgmtService {
 	public List<User> getAllUsers() {
 
 		List<UserMaster> findAll = userMasterRepo.findAll();
-		List<User> users = new ArrayList<User>();
+		List<User> users = new ArrayList<>();
 
 		for (UserMaster entity : findAll) {
 			User user = new User();
@@ -108,7 +114,7 @@ public class UserMgmgServiceImpl implements UserMgmtService {
 			userMasterRepo.deleteById(userId);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception occured", e);
 		}
 
 		return false;
@@ -177,12 +183,11 @@ public class UserMgmgServiceImpl implements UserMgmtService {
 		String numbers = "0123456789";
 		String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
 		StringBuilder sb = new StringBuilder();
-		Random random = new Random();
 
 		int length = 6;
 
 		for (int i = 0; i < length; i++) {
-			int index = random.nextInt(alphaNumeric.length());
+			int index = this.random.nextInt(alphaNumeric.length());
 			char randomChar = alphaNumeric.charAt(index);
 			sb.append(randomChar);
 		}
@@ -194,27 +199,24 @@ public class UserMgmgServiceImpl implements UserMgmtService {
 		String url = "";
 		String mailBody = null;
 
-		try {
-			FileReader fr = new FileReader(fileName);
-			BufferedReader br = new BufferedReader(fr);
+		try (FileReader fr = new FileReader(fileName); BufferedReader br = new BufferedReader(fr);) {
 
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder builder = new StringBuilder();
 			String line = br.readLine();
 
 			while (line != null) {
-				buffer.append(line);
+				builder.append(line);
 				line = br.readLine();
 			}
 
-			br.close();
-			mailBody = buffer.toString();
+			mailBody = builder.toString();
 			mailBody = mailBody.replace("{FULLNAME}", fullName);
 			mailBody = mailBody.replace("{TEMP-PWD}", pwd);
 			mailBody = mailBody.replace("{URL}", url);
 			mailBody = mailBody.replace("PWD", pwd);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error Occured", e);
 		}
 		return mailBody;
 	}

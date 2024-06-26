@@ -3,6 +3,7 @@ package in.ashokit.entity;
 import java.time.LocalDate;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,12 +31,14 @@ public class UserMaster {
 	private String accStatus;
 	private String createdBy;
 	private String updatedBy;
+	
 	@CreationTimestamp
 	@Column(name="createdDate",updatable = false)
 	private LocalDate createdDate;
-	@CreationTimestamp
-	@Column(name="updateddate",insertable = false)
-	private LocalDate updateddate;
+	
+	@UpdateTimestamp
+	@Column(name="updatedDate")
+	private LocalDate updatedDate;
 
 	
 }
